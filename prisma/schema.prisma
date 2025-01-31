@@ -1,0 +1,167 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String             @id @default(auto()) @map("_id") @db.ObjectId
+  creationDate     DateTime           @default(now())
+  username         String             @unique
+  password         String
+  Name             String
+  LastName         String
+  ProfilePicture   String
+  Active           Boolean
+  BigEventAtendees BigEventAtendees[]
+  BigEventLikes    BigEventLikes[]
+  BigEventComments BigEventComments[]
+  Ticket           Ticket[]
+  Post             Post[]
+  PostComments     PostComments[]
+  PostLikes        PostLikes[]
+
+  SmallEvent SmallEvent[]
+  Friend1    Friend[]     @relation("firstFriend")
+  Friend2    Friend[]     @relation("secondFriend")
+}
+
+enum VerifiedStatus {
+  Verified
+  Pending
+}
+
+model Organization {
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  OrganizationName String
+  Status           VerifiedStatus @default(Pending)
+  ProfilePicture   String
+  Document         String
+  BigEvent         BigEvent[]
+}
+
+model BigEvent {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  Name         String
+  Price        Int
+  Quota        Int
+  isActive     Boolean
+  EventDate    DateTime
+  Country      String
+  City         String
+  District     String
+  Place        String
+  creationDate DateTime @default(now())
+
+  OrganizationID   String             @db.ObjectId
+  Organization     Organization       @relation(fields: [OrganizationID], references: [id])
+  BigEventAtendees BigEventAtendees[]
+  BigEventLikes    BigEventLikes[]
+  BigEventComments BigEventComments[]
+  Ticket           Ticket[]
+}
+
+model BigEventLikes {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  creationDate DateTime @default(now())
+
+  user       User     @relation(fields: [userID], references: [id])
+  userID     String   @db.ObjectId
+  bigEvent   BigEvent @relation(fields: [bigEventID], references: [id])
+  bigEventID String   @db.ObjectId
+}
+
+model BigEventComments {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  commentBody  String
+  creationDate DateTime @default(now())
+
+  user       User     @relation(fields: [userID], references: [id])
+  userID     String   @db.ObjectId
+  bigEvent   BigEvent @relation(fields: [bigEventID], references: [id])
+  bigEventID String   @db.ObjectId
+}
+
+model BigEventAtendees {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  creationDate DateTime @default(now())
+
+  user       User     @relation(fields: [userID], references: [id])
+  userID     String   @db.ObjectId
+  bigEvent   BigEvent @relation(fields: [bigEventID], references: [id])
+  bigEventID String   @db.ObjectId
+}
+
+model Ticket {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  uniqueKey    String   @unique
+  creationDate DateTime @default(now())
+
+  user       User     @relation(fields: [userID], references: [id])
+  userID     String   @db.ObjectId
+  bigEvent   BigEvent @relation(fields: [bigEventID], references: [id])
+  bigEventID String   @db.ObjectId
+}
+
+model Post {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  Photo        String
+  Text         String
+  creationDate DateTime @default(now())
+
+  user         User           @relation(fields: [userID], references: [id])
+  userID       String         @db.ObjectId
+  PostComments PostComments[]
+  PostLikes    PostLikes[]
+}
+
+model PostComments {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  comment      String
+  creationDate DateTime @default(now())
+
+  post    Post   @relation(fields: [postID], references: [id])
+  postID  String @db.ObjectId
+  owner   User   @relation(fields: [ownerID], references: [id])
+  ownerID String @db.ObjectId
+}
+
+model PostLikes {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  creationDate DateTime @default(now())
+
+  post    Post   @relation(fields: [postID], references: [id])
+  postID  String @db.ObjectId
+  owner   User   @relation(fields: [ownerID], references: [id])
+  ownerID String @db.ObjectId
+}
+
+model SmallEvent {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  Latitude     Json
+  Longitude    Json
+  Quoata       Int
+  EventDate    DateTime
+  creationDate DateTime @default(now())
+
+  owner   User   @relation(fields: [ownerID], references: [id])
+  ownerID String @db.ObjectId
+}
+
+model Friend {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userFirst    User   @relation("firstFriend", fields: [userFirstID], references: [id])
+  userFirstID  String @db.ObjectId
+  userSecond   User   @relation("secondFriend", fields: [userSecondID], references: [id])
+  userSecondID String @db.ObjectId
+}
