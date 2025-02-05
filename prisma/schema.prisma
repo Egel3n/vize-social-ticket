@@ -18,10 +18,10 @@ model User {
   creationDate     DateTime           @default(now())
   username         String             @unique
   password         String
-  Name             String
-  LastName         String
-  ProfilePicture   String
-  Active           Boolean
+  name             String
+  lastName         String
+  profilePicture   String
+  active           Boolean          @default(true)
   BigEventAtendees BigEventAtendees[]
   BigEventLikes    BigEventLikes[]
   BigEventComments BigEventComments[]
