@@ -1,9 +1,11 @@
 import express from "express";
 import router from "./router";
 import cors from "cors";
+
 import { protectRoute } from "./middleware/auth";
 import { login as loginUser, sign as signUser } from "./handler/user";
 import { login as loginOrg, sign as signOrg } from "./handler/organization";
+
 const app = express();
 
 app.use(cors());
