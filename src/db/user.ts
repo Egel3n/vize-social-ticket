@@ -23,7 +23,7 @@ export const createUser = async (data) => {
 
 }
 
-export const getByUsername = async (username) => {
+export const userByUsername = async (username) => {
 
     try {
         const user = await client.user.findUnique({

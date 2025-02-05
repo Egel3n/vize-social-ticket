@@ -4,8 +4,9 @@ import {Router} from 'express'
 const router = Router()
 
 
-router.post('user', (req,res)=>{
-    
+router.get('/user', (req,res)=>{
+    console.log(req.user)
+    res.status(200).send()
 })
 
 
