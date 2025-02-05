@@ -21,7 +21,7 @@ model User {
   name             String
   lastName         String
   profilePicture   String
-  active           Boolean          @default(true)
+  active           Boolean            @default(true)
   BigEventAtendees BigEventAtendees[]
   BigEventLikes    BigEventLikes[]
   BigEventComments BigEventComments[]
@@ -42,24 +42,26 @@ enum VerifiedStatus {
 
 model Organization {
   id               String         @id @default(auto()) @map("_id") @db.ObjectId
-  OrganizationName String
-  Status           VerifiedStatus @default(Pending)
-  ProfilePicture   String
-  Document         String
+  organizationName String         @unique
+  status           VerifiedStatus @default(Pending)
+  profilePicture   String
+  document         String
+  password         String
   BigEvent         BigEvent[]
 }
 
 model BigEvent {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  Name         String
-  Price        Int
-  Quota        Int
-  isActive     Boolean
-  EventDate    DateTime
-  Country      String
-  City         String
-  District     String
-  Place        String
+  name         String
+  price        Int
+  quota        Int
+  eventDate    DateTime
+  country      String
+  city         String
+  district     String
+  place        String
+  picture      String
+  isActive     Boolean  @default(true)
   creationDate DateTime @default(now())
 
   OrganizationID   String             @db.ObjectId

@@ -1,13 +1,9 @@
-import {Router} from 'express'
+import { Router } from "express";
 
+const router = Router();
 
-const router = Router()
+router.get("/testjwt", (req, res) => {
+  res.status(200).json(req.user);
+});
 
-
-router.get('/user', (req,res)=>{
-    console.log(req.user)
-    res.status(200).send()
-})
-
-
-export default router 
+export default router;
