@@ -14,25 +14,24 @@ export const sign = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   const body = req.body;
-  const username = body.username
-  const password = body.password
+  const username = body.username;
+  const password = body.password;
   try {
-      const user = await userByUsername(username)
-        if(!user){
-            res.status(401).json({message:'wrong username'})
-            return
-        }
-      
-      if(!comparePassword(password,user.password)) {
-        res.status(401).json({messsage:'wrong password'})
-        return
-      }
-     
-      const token = createJWT(user)
-      res.status(200).json({token})
-    
+    const user = await userByUsername(username);
+    if (!user) {
+      res.status(401).json({ message: "wrong username" });
+      return;
+    }
+
+    if (!comparePassword(password, user.password)) {
+      res.status(401).json({ messsage: "wrong password" });
+      return;
+    }
+
+    const token = createJWT(user);
+    res.status(200).json({ token });
   } catch (error) {
-    console.error(error)
-    next(error)
+    console.error(error);
+    next(error);
   }
 };

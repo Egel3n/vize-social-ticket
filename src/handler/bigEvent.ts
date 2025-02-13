@@ -4,7 +4,7 @@ export const newBigEvent = async (req, res, next) => {
   const body = req.body;
 
   if (!req.user.organizationName) {
-    res.status(401).json({ message: "not a organization" });
+    res.status(401).json({ message: "not an organization" });
   }
 
   try {
@@ -16,10 +16,21 @@ export const newBigEvent = async (req, res, next) => {
   }
 };
 
+//if type is not selected must be all
 export const listEvents = async (req, res, next) => {
-  const { country, city } = req.params;
+  const { country, city, type } = req.params;
   try {
-    const events = await db.listEventsByCity(country, city);
+    const events = await db.listEventsByCity(country, city, type);
+    res.status(200).json({ data: events });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+export const listAllEvents = async (req, res, next) => {
+  try {
+    const events = await db.getAllEvents();
     res.status(200).json({ data: events });
   } catch (error) {
     console.error(error);
@@ -34,6 +45,31 @@ export const getEvent = async (req, res, next) => {
     res.status(200).json({ data: event });
   } catch (error) {
     console.error(error);
+    next(error);
+  }
+};
+
+export const makeAComment = async (req, res, next) => {
+  const userID = req.user.id;
+  const { text, bigEventID } = req.body;
+
+  try {
+    console.log(bigEventID);
+    const comment = await db.createComment(bigEventID, userID, text);
+    res.status(201).json({ data: comment });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+export const getComments = async (req, res, next) => {
+  const bigEventID = req.params.id;
+  try {
+    const comments = await db.listComments(bigEventID);
+    res.status(200).json({ data: comments });
+  } catch (error) {
+    console.log(error);
     next(error);
   }
 };

@@ -50,6 +50,15 @@ model Organization {
   BigEvent         BigEvent[]
 }
 
+enum EventType {
+  Concert
+  Theater
+  Festival
+  Standp
+  Kids
+  Other
+}
+
 model BigEvent {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   name         String
@@ -63,6 +72,8 @@ model BigEvent {
   picture      String
   isActive     Boolean  @default(true)
   creationDate DateTime @default(now())
+  type         EventType
+  text    String 
 
   OrganizationID   String             @db.ObjectId
   Organization     Organization       @relation(fields: [OrganizationID], references: [id])
@@ -147,13 +158,15 @@ model PostLikes {
   ownerID String @db.ObjectId
 }
 
+
+
 model SmallEvent {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  Latitude     Json
-  Longitude    Json
-  Quoata       Int
-  EventDate    DateTime
+  location     Json
+  quoata       Int
+  eventDate    DateTime
   creationDate DateTime @default(now())
+  name         String
 
   owner   User   @relation(fields: [ownerID], references: [id])
   ownerID String @db.ObjectId
