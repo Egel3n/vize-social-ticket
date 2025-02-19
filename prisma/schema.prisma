@@ -167,6 +167,7 @@ model SmallEvent {
   eventDate    DateTime
   creationDate DateTime @default(now())
   name         String
+  isActive     Boolean @default(true)
 
   owner   User   @relation(fields: [ownerID], references: [id])
   ownerID String @db.ObjectId

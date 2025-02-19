@@ -1,3 +1,4 @@
+import client from "../db/dbClient";
 import * as db from "../db/smallEvent";
 
 export const createSmallEvent = async (req, res, next) => {
@@ -21,6 +22,30 @@ export const getSmallEvents = async (req, res, next) => {
   try {
     const events = await db.listEventByDistance(lat, lng, dist);
     res.status(200).json({ data: events });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+export const getSmallEventByID = async (req, res, next) => {
+  const { id } = req.query;
+  try {
+    const event = await db.getEventByID(id);
+    res.status(200).json({ data: event });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+export const deleteEvent = async (req, res, next) => {
+  const eventID = req.params.id;
+  const userID = req.user.id;
+
+  try {
+    const deletedEvent = await db.passiveEvent(userID, eventID);
+    res.status(204);
   } catch (error) {
     console.error(error);
     next(error);

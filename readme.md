@@ -43,11 +43,11 @@
   - [ ] Share with friends
   - [ ] Like and Comment to the events
 - [ ] Small Events
-  - [ ] Create events
+  - [x] Create events
   - [ ] Delete events
   - [ ] Join events, as a handshake protocol
-  - [ ] List all active events by radius
-  - [ ] Get event by ID
+  - [x] List all active events by radius
+  - [x] Get event by ID
 - [ ] Feed
   - [ ] Get all friends unseen posts
   - [ ] When a post created, it should be added to every friend's feed

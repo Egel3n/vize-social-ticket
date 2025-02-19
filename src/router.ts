@@ -19,4 +19,6 @@ router.get("/bigevent/:id", bigEventHandler.getEvent); //last in order
 // SMALL EVENT ROUTES
 router.post("/smallevent/create", smallEventHandler.createSmallEvent);
 router.get("/smallevent/nearby-locations", smallEventHandler.getSmallEvents);
+router.get("/smallevent", smallEventHandler.getSmallEventByID);
+router.delete("/smallevent/:id", smallEventHandler.deleteEvent);
 export default router;

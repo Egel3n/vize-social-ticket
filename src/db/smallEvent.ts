@@ -34,3 +34,25 @@ export const listEventByDistance = async (lat, lng, distance) => {
 
   return locations;
 };
+
+export const getEventByID = async (id) => {
+  const event = await client.smallEvent.findUnique({
+    where: {
+      id,
+    },
+  });
+  return event;
+};
+
+export const passiveEvent = async (userID, eventID) => {
+  const deletedEvent = await client.smallEvent.update({
+    where: {
+      ownerID: userID,
+      id: eventID,
+    },
+    data: {
+      isActive: false,
+    },
+  });
+  return deletedEvent;
+};
