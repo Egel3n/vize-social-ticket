@@ -22,4 +22,9 @@ app.post("/org/login", loginOrg);
 
 app.use("/api", protectRoute, router); // protect this route
 
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(500).json({ message: "There was an error" });
+});
+
 export default app;

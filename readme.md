@@ -25,15 +25,15 @@
   - [ ] Get organization by username
   - [ ] Profile Update
 - [ ] Big Events
-  - [x] Create Events only organizations
+  - [x] Create Events by only organizations
   - [ ] Purchase ticket
     - [ ] Singular ticket
     - [ ] Ticket for friend
     - [ ] Create unique key for each ticket
-  - [ ] MyTickets
-    - [ ] Return owned tickets for user
-    - [ ] Refund application
-    - [ ] Get ticket info
+  - [x] MyTickets
+    - [x] Return owned tickets for user
+    - [x] Refund application
+    - [x] Get ticket info
   - [ ] A panel for entrants data
     - [ ] Percentage of genders
     - [ ] Total Gain after our fee
@@ -44,12 +44,12 @@
   - [ ] Like and Comment to the events
 - [ ] Small Events
   - [x] Create events
-  - [ ] Delete events
+  - [x] Delete events
   - [ ] Join events, as a handshake protocol
   - [x] List all active events by radius
   - [x] Get event by ID
 - [ ] Feed
-  - [ ] Get all friends unseen posts
+  - [ ] Get all friend's unseen posts
   - [ ] When a post created, it should be added to every friend's feed
   - [ ] When a friend displays the post, it should not displayable again
   - [ ] Like and comment

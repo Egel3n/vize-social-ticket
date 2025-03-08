@@ -116,13 +116,16 @@ model BigEventAtendees {
 
 model Ticket {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  uniqueKey    String   @unique
+  price        Int
+  isRefunded   Boolean  @default(false) 
+  
   creationDate DateTime @default(now())
-
   user       User     @relation(fields: [userID], references: [id])
   userID     String   @db.ObjectId
   bigEvent   BigEvent @relation(fields: [bigEventID], references: [id])
   bigEventID String   @db.ObjectId
+
+   @@unique([userID,bigEventID])
 }
 
 model Post {
