@@ -3,6 +3,7 @@ import { comparePassword, createOrgJWT } from "../middleware/auth";
 
 export const sign = async (req, res, next) => {
   const body = req.body;
+  body.file = req.file;
 
   try {
     const org = await db.createOrganization(body);
@@ -32,6 +33,18 @@ export const login = async (req, res, next) => {
     res.status(200).json({ token });
   } catch (error) {
     console.error(error);
+    next(error);
+  }
+};
+
+export const getOrgPP = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const user = await db.orgByID(id);
+    res.status(200).json({
+      url: "http://localhost:8000/profilepicture/" + user.profilePicture,
+    });
+  } catch (error) {
     next(error);
   }
 };

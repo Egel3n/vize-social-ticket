@@ -8,7 +8,7 @@ export const createOrganization = async (organization) => {
     const org = await client.organization.create({
       data: {
         organizationName,
-        profilePicture,
+        profilePicture: organization.file.filename,
         document,
         password: await hashPassword(password),
       },
@@ -30,4 +30,12 @@ export const orgByName = async (organizationName) => {
     console.error(error);
     throw Error(error);
   }
+};
+
+export const orgByID = async (id) => {
+  return await client.organization.findUnique({
+    where: {
+      id,
+    },
+  });
 };

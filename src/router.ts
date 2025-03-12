@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as bigEventHandler from "./handler/bigEvent";
 import * as smallEventHandler from "./handler/smallEvent";
 import * as ticketHandler from "./handler/ticket";
+import * as multer from "multer";
 const router = Router();
 
 router.get("/testjwt", (req, res) => {

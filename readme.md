@@ -13,7 +13,7 @@
     - [x] Make it as middleware
   - [ ] Get user profile by username for searching maybe index username
   - [ ] Profile Update maybe username, and password
-  - [ ] Photo Upload
+  - [x] Photo Upload
   - [ ] Add Friends
   - [ ] Get Friend List
 - [ ] Organization
@@ -22,14 +22,14 @@
   - [x] Auth
     - [x] JWT
     - [x] Middleware
-  - [ ] Get organization by username
-  - [ ] Profile Update
+  - [x] Get organization by username
+  - [x] Profile Update
 - [ ] Big Events
   - [x] Create Events by only organizations
-  - [ ] Purchase ticket
-    - [ ] Singular ticket
-    - [ ] Ticket for friend
-    - [ ] Create unique key for each ticket
+  - [x] Purchase ticket
+    - [x] Singular ticket
+    - [x] Ticket for friend
+    - [x] Create unique key for each ticket
   - [x] MyTickets
     - [x] Return owned tickets for user
     - [x] Refund application

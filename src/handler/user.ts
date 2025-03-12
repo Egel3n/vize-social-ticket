@@ -1,8 +1,13 @@
-import { createUser, userByUsername } from "../db/user";
+import { createUser, userByUsername, getUserByID } from "../db/user";
 import { comparePassword, createJWT } from "../middleware/auth";
 
 export const sign = async (req, res, next) => {
   const body = req.body;
+  body.file = req.file; //gather all components in body
+  if (!userByUsername(body.username)) {
+    res.status(400).json({ message: "Username already exists ." });
+  }
+
   try {
     const user = await createUser(body);
     res.status(201).json({ message: "User Created", data: user });
@@ -32,6 +37,18 @@ export const login = async (req, res, next) => {
     res.status(200).json({ token });
   } catch (error) {
     console.error(error);
+    next(error);
+  }
+};
+
+export const getUserPP = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const user = await getUserByID(id);
+    res.status(200).json({
+      url: "http://localhost:8000/profilepicture/" + user.profilePicture,
+    });
+  } catch (error) {
     next(error);
   }
 };
