@@ -3,7 +3,7 @@ import { comparePassword, createJWT } from "../middleware/auth";
 
 export const sign = async (req, res, next) => {
   const body = req.body;
-  body.file = req.file; //gather all components in body
+  body.file = req.files["profilepicture"][0]; //gather all components in body
   if (!userByUsername(body.username)) {
     res.status(400).json({ message: "Username already exists ." });
   }

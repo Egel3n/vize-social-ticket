@@ -2,14 +2,14 @@ import { hashPassword } from "../middleware/auth";
 import client from "./dbClient";
 
 export const createOrganization = async (organization) => {
-  const { organizationName, password, profilePicture, document } = organization;
+  const { organizationName, password } = organization;
 
   try {
     const org = await client.organization.create({
       data: {
         organizationName,
         profilePicture: organization.file.filename,
-        document,
+        document: organization.verification.filename,
         password: await hashPassword(password),
       },
     });

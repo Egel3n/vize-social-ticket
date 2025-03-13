@@ -3,7 +3,9 @@ import { comparePassword, createOrgJWT } from "../middleware/auth";
 
 export const sign = async (req, res, next) => {
   const body = req.body;
-  body.file = req.file;
+  body.file = req.files["profilepicture"][0];
+  body.verification = req.files["verification"][0];
+  console.log(body);
 
   try {
     const org = await db.createOrganization(body);

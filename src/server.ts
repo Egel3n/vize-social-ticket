@@ -15,7 +15,7 @@ import {
   sign as signOrg,
 } from "./handler/organization";
 
-import { ppUpload } from "./middleware/fileware";
+import { upload } from "./middleware/fileware";
 
 const app = express();
 
@@ -26,12 +26,25 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/profilepicture", express.static(path.join(__dirname, "www/pp")));
 
 // USER ENDPOINTS
-app.post("/user/sign", ppUpload.single("file"), signUser);
+//app.post("/user/sign", upload.single("ege"), signUser);
 app.post("/user/login", loginUser);
 app.get("/user/profile/:id", getUserPP);
 
+app.post(
+  "/user/sign",
+  upload.fields([{ name: "profilepicture", maxCount: 1 }]),
+  signUser
+);
+
 // ORG ENDPOINTS
-app.post("/org/sign", ppUpload.single("file"), signOrg);
+app.post(
+  "/org/sign",
+  upload.fields([
+    { name: "profilepicture", maxCount: 1 },
+    { name: "verification", maxCount: 1 },
+  ]),
+  signOrg
+);
 app.post("/org/login", loginOrg);
 app.get("/org/profile/:id", getOrgPP);
 
