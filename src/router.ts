@@ -2,13 +2,28 @@ import { Router } from "express";
 import * as bigEventHandler from "./handler/bigEvent";
 import * as smallEventHandler from "./handler/smallEvent";
 import * as ticketHandler from "./handler/ticket";
-import * as multer from "multer";
+import * as organizationHandler from "./handler/organization";
+import * as userHandler from "./handler/user";
+import * as friendHandler from "./handler/friend";
+
 const router = Router();
 
 router.get("/testjwt", (req, res) => {
   res.status(200).json(req.user);
 });
 
+//USER ROTUES
+router.get("/user/addFriend/:id", friendHandler.addFriend);
+router.get("/user/listFriendships/", friendHandler.getListFriendRequests);
+router.get(
+  "/user/acceptFriendshipRequest/:id",
+  friendHandler.acceptFriendshipRequest
+);
+router.get(
+  "/user/rejectFriendshipRequest/:id",
+  friendHandler.rejectFriendshipRequest
+);
+router.get("/user/removeFriend/:id", userHandler);
 // BIG EVENT ROUTES
 router.post("/bigevent/create", bigEventHandler.newBigEvent);
 router.get("/bigevent/list", bigEventHandler.listAllEvents);
@@ -28,4 +43,8 @@ router.post("/ticket/create", ticketHandler.buyTicket);
 router.get("/ticket/user/:id", ticketHandler.getUserTickets);
 router.get("/ticket/:id", ticketHandler.getTicketByID);
 router.put("/ticket/refund/:id", ticketHandler.refundTicket);
+
+// ADMIN ROTUES
+router.get("/admin/verification/:id", organizationHandler.getOrgFile);
+
 export default router;

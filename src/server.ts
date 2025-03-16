@@ -24,6 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/profilepicture", express.static(path.join(__dirname, "www/pp")));
+app.use("/verification", express.static(path.join(__dirname, "www/orgfiles")));
 
 // USER ENDPOINTS
 //app.post("/user/sign", upload.single("ege"), signUser);
@@ -49,6 +50,10 @@ app.post("/org/login", loginOrg);
 app.get("/org/profile/:id", getOrgPP);
 
 app.use("/api", protectRoute, router); // protect this route
+
+app.use("/*", (req, res) => {
+  res.status(404).json({ message: "unvalid url" });
+});
 
 app.use((err, req, res, next) => {
   console.log(err);

@@ -176,11 +176,22 @@ model SmallEvent {
   ownerID String @db.ObjectId
 }
 
+enum FriendshipStatus {
+  Accepted
+  Rejected
+  Pending
+  Removed
+}
+
 model Friend {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+  creationDate  DateTime @default(now())
 
   userFirst    User   @relation("firstFriend", fields: [userFirstID], references: [id])
   userFirstID  String @db.ObjectId
   userSecond   User   @relation("secondFriend", fields: [userSecondID], references: [id])
   userSecondID String @db.ObjectId
+  status FriendshipStatus @default(Pending)
+  @@unique([userFirstID,userSecondID])
+
 }

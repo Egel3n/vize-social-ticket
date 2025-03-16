@@ -1,4 +1,11 @@
-import { createUser, userByUsername, getUserByID } from "../db/user";
+import {
+  createUser,
+  userByUsername,
+  getUserByID,
+  sendFriendRequest,
+  getFriendshipRequests,
+  updateStatusFriendshipRequest,
+} from "../db/user";
 import { comparePassword, createJWT } from "../middleware/auth";
 
 export const sign = async (req, res, next) => {

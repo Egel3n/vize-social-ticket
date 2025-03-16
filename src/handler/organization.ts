@@ -50,3 +50,14 @@ export const getOrgPP = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getOrgFile = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const org = await db.orgByID(id);
+    if (!org) throw new Error("No organization with ID");
+    res
+      .status(200)
+      .json({ url: "http://localhost:8000/verification/" + org.document });
+  } catch (error) {}
+};
