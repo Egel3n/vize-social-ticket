@@ -29,6 +29,7 @@ export const acceptFriendshipRequest = async (req, res, next) => {
       friendshipID,
       "Accepted"
     );
+    res.status(200).json({ data: updated });
   } catch (error) {
     next(error);
   }
@@ -40,6 +41,7 @@ export const rejectFriendshipRequest = async (req, res, next) => {
       friendshipID,
       "Rejected"
     );
+    res.status(200).json({ data: updated });
   } catch (error) {
     next(error);
   }
@@ -57,8 +59,13 @@ export const removeFriend = (req, res, next) => {
   }
 };
 
-/* 
- ! ilk db/friend.ts'deki arama fonksiyonunu test et 
- TODO sonrasinda buraya gel accept reject remove test et 
-
-*/
+export const findFriendshipID = async (req, res, next) => {
+  const user = req.user.id;
+  const friend = req.params.id;
+  try {
+    const friendshipID = await db.getFriendshipID(user, friend);
+    res.status(200).json({ data: friendshipID });
+  } catch (error) {
+    next(error);
+  }
+};

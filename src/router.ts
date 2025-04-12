@@ -5,6 +5,7 @@ import * as ticketHandler from "./handler/ticket";
 import * as organizationHandler from "./handler/organization";
 import * as userHandler from "./handler/user";
 import * as friendHandler from "./handler/friend";
+import { upload } from "./middleware/fileware";
 
 const router = Router();
 
@@ -23,9 +24,14 @@ router.get(
   "/user/rejectFriendshipRequest/:id",
   friendHandler.rejectFriendshipRequest
 );
-router.get("/user/removeFriend/:id", userHandler);
+router.get("/user/removeFriend/:id", friendHandler.removeFriend);
+router.get("/user/findfriendship/:id", friendHandler.findFriendshipID);
 // BIG EVENT ROUTES
-router.post("/bigevent/create", bigEventHandler.newBigEvent);
+router.post(
+  "/bigevent/create",
+  upload.fields([{ name: "eventphotos", maxCount: 3 }]),
+  bigEventHandler.newBigEvent
+);
 router.get("/bigevent/list", bigEventHandler.listAllEvents);
 router.get("/bigevent/list/:country/:city", bigEventHandler.listEvents);
 router.post("/bigevent/comment", bigEventHandler.makeAComment);
@@ -36,6 +42,14 @@ router.get("/bigevent/:id", bigEventHandler.getEvent); //last in order
 router.post("/smallevent/create", smallEventHandler.createSmallEvent);
 router.get("/smallevent/nearby-locations", smallEventHandler.getSmallEvents);
 router.get("/smallevent", smallEventHandler.getSmallEventByID);
+router.put(
+  "/smallevent/atendee/increment",
+  smallEventHandler.incrementAtendeeCount
+);
+router.put(
+  "/smallevent/atendee/decrement",
+  smallEventHandler.decrementAtendeeCount
+);
 router.delete("/smallevent/:id", smallEventHandler.deleteEvent);
 
 // TICKET ROUTES

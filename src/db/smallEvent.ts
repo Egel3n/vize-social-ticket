@@ -26,9 +26,10 @@ export const listEventByDistance = async (lat, lng, distance) => {
             type: "Point",
             coordinates: [parseFloat(lng), parseFloat(lat)],
           },
-          $maxDistance: parseFloat(distance) * 1000, // Metre cinsinden
+          $maxDistance: parseFloat(distance) * 1000, // Metric
         },
       },
+      isActive: true,
     },
   });
 
@@ -55,4 +56,43 @@ export const passiveEvent = async (userID, eventID) => {
     },
   });
   return deletedEvent;
+};
+
+export const passiveExpiredEvents = async () => {
+  await client.smallEvent.updateMany({
+    where: {
+      creationDate: {
+        lt: new Date(Date.now() - 20 * 60 * 1000),
+      },
+      isActive: true,
+    },
+    data: {
+      isActive: false,
+    },
+  });
+};
+
+export const getEventsByUserID = async (id) => {
+  const events = await client.smallEvent.findMany({
+    where: {
+      ownerID: id,
+    },
+    orderBy: {
+      creationDate: "desc",
+    },
+  });
+
+  return events;
+};
+
+export const updateAtendees = async (eventID, atendees) => {
+  const updated = await client.smallEvent.update({
+    where: {
+      id: eventID,
+    },
+    data: {
+      currentAtendees: atendees,
+    },
+  });
+  return updated;
 };

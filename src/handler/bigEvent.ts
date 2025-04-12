@@ -2,6 +2,7 @@ import * as db from "../db/bigEvent";
 
 export const newBigEvent = async (req, res, next) => {
   const body = req.body;
+  body.file = req.files["eventphotos"];
 
   if (!req.user.organizationName) {
     res.status(401).json({ message: "not an organization" });

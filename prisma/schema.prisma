@@ -69,7 +69,7 @@ model BigEvent {
   city         String
   district     String
   place        String
-  picture      String
+  picture      String[]
   isActive     Boolean  @default(true)
   creationDate DateTime @default(now())
   type         EventType
@@ -171,6 +171,7 @@ model SmallEvent {
   creationDate DateTime @default(now())
   name         String
   isActive     Boolean @default(true)
+  currentAtendees Int @default(0)
 
   owner   User   @relation(fields: [ownerID], references: [id])
   ownerID String @db.ObjectId

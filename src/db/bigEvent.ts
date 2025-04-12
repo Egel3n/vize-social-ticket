@@ -4,7 +4,6 @@ export const createBigEvent = async (event, OrganizationID) => {
   const {
     name,
     price,
-    picture,
     country,
     city,
     district,
@@ -13,19 +12,26 @@ export const createBigEvent = async (event, OrganizationID) => {
     eventDate,
     type,
     text,
+    file,
   } = event;
+
+  const photoArray = [];
+  file.forEach((element) => {
+    photoArray.push(element.filename);
+  });
+
   try {
     const event = await client.bigEvent.create({
       data: {
         name,
-        price,
+        price: Number(price),
         country,
         city,
         district,
         place,
-        quota,
+        quota: Number(quota),
         eventDate: new Date(eventDate),
-        picture,
+        picture: photoArray,
         type,
         OrganizationID,
         text,

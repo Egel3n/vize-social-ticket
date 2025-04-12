@@ -7,6 +7,11 @@ export const createSmallEvent = async (req, res, next) => {
   }
 
   try {
+    const events = await db.getEventsByUserID(req.user.id);
+    if (events[0].isActive) {
+      res.status(402).json({ messsage: "already have an active event" });
+      return;
+    }
     const event = await db.createEvent(req.body, req.user.id);
     res.status(201).json({ message: "event created", data: event });
   } catch (error) {
@@ -48,6 +53,53 @@ export const deleteEvent = async (req, res, next) => {
     res.status(204);
   } catch (error) {
     console.error(error);
+    next(error);
+  }
+};
+
+export const checkExpiredEventsJOB = async () => {
+  try {
+    await db.passiveExpiredEvents();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUserEventList = async (req, res, next) => {
+  try {
+    const events = await db.getEventsByUserID(req.user.id);
+    res.status(200).json({ data: events });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const incrementAtendeeCount = async (req, res, next) => {
+  const id = req.body.eventID;
+  const userID = req.user.id;
+  try {
+    const event = await db.getEventByID(id);
+    if (!event) res.status(404).json({ message: "Event not exist" });
+    if (event.quoata === event.currentAtendees) throw Error("Quota is full");
+    const updatedAtendees = event.currentAtendees + 1;
+    await db.updateAtendees(id, updatedAtendees);
+    res.status(201).json({ messsage: "incremented" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const decrementAtendeeCount = async (req, res, next) => {
+  const id = req.body.eventID;
+  const userID = req.user.id;
+  try {
+    const event = await db.getEventByID(id);
+    if (!event) res.status(404).json({ message: "Event not exist" });
+    if (event.currentAtendees === 0) throw Error("No atendees");
+    const updatedAtendees = event.currentAtendees - 1;
+    await db.updateAtendees(id, updatedAtendees);
+    res.status(201).json({ messsage: "decremented" });
+  } catch (error) {
     next(error);
   }
 };

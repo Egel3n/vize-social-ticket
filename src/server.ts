@@ -2,6 +2,7 @@ import express from "express";
 import router from "./router";
 import cors from "cors";
 import path from "path";
+import cron from "node-cron";
 
 import { protectRoute } from "./middleware/auth";
 import {
@@ -15,6 +16,8 @@ import {
   sign as signOrg,
 } from "./handler/organization";
 
+import { checkExpiredEventsJOB } from "./handler/smallEvent";
+
 import { upload } from "./middleware/fileware";
 
 const app = express();
@@ -23,11 +26,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// cron.schedule("*/1 * * * *", checkExpiredEventsJOB); //cron job for passivizing expired smallEvents
+
 app.use("/profilepicture", express.static(path.join(__dirname, "www/pp")));
 app.use("/verification", express.static(path.join(__dirname, "www/orgfiles")));
+app.use(
+  "/eventphotos",
+  express.static(path.join(__dirname, "www/eventphotos"))
+);
 
 // USER ENDPOINTS
-//app.post("/user/sign", upload.single("ege"), signUser);
 app.post("/user/login", loginUser);
 app.get("/user/profile/:id", getUserPP);
 
@@ -57,7 +65,7 @@ app.use("/*", (req, res) => {
 
 app.use((err, req, res, next) => {
   console.log(err);
-  res.status(500).json({ message: "There was an error" });
+  res.status(500).json({ message: err.message });
 });
 
 export default app;
