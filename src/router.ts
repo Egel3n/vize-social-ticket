@@ -5,6 +5,8 @@ import * as ticketHandler from "./handler/ticket";
 import * as organizationHandler from "./handler/organization";
 import * as userHandler from "./handler/user";
 import * as friendHandler from "./handler/friend";
+import * as counrtyHandler from "./handler/country";
+import * as cityHandler from "./handler/city";
 import { upload } from "./middleware/fileware";
 
 const router = Router();
@@ -33,7 +35,7 @@ router.post(
   bigEventHandler.newBigEvent
 );
 router.get("/bigevent/list", bigEventHandler.listAllEvents);
-router.get("/bigevent/list/:country/:city", bigEventHandler.listEvents);
+router.get("/bigevent/filter", bigEventHandler.listEvents);
 router.post("/bigevent/comment", bigEventHandler.makeAComment);
 router.get("/bigevent/comment/:id", bigEventHandler.getComments);
 router.get("/bigevent/:id", bigEventHandler.getEvent); //last in order
@@ -60,5 +62,11 @@ router.put("/ticket/refund/:id", ticketHandler.refundTicket);
 
 // ADMIN ROTUES
 router.get("/admin/verification/:id", organizationHandler.getOrgFile);
+
+// COUNTRY ROUTES
+router.get("/countries", counrtyHandler.getCountries);
+
+// CITY ROUTES
+router.get("/cities/:id", cityHandler.allCities);
 
 export default router;

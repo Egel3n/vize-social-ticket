@@ -19,9 +19,9 @@ export const newBigEvent = async (req, res, next) => {
 
 //if type is not selected must be all
 export const listEvents = async (req, res, next) => {
-  const { country, city, type } = req.params;
+  const { countryID, cityID, type } = req.query;
   try {
-    const events = await db.listEventsByCity(country, city, type);
+    const events = await db.listEventsByCity(countryID, cityID, type);
     res.status(200).json({ data: events });
   } catch (error) {
     console.error(error);

@@ -1,3 +1,4 @@
+import { countReset } from "console";
 import client from "./dbClient";
 
 export const createBigEvent = async (event, OrganizationID) => {
@@ -26,7 +27,7 @@ export const createBigEvent = async (event, OrganizationID) => {
         name,
         price: Number(price),
         country,
-        city,
+        cityID: city,
         district,
         place,
         quota: Number(quota),
@@ -44,33 +45,36 @@ export const createBigEvent = async (event, OrganizationID) => {
   }
 };
 
-export const listEventsByCity = async (country, city, type) => {
-  let queryObject;
+export const listEventsByCity = async (countryID, cityID, type) => {
+  let where: any = {};
 
-  if (type === "all") {
-    queryObject = {
-      where: {
-        city,
-        country,
-        type,
-      },
-      orderBy: {
-        eventDate: "desc",
-      },
-    };
-  } else {
-    queryObject = {
-      where: {
-        city,
-        country,
-      },
-      orderBy: {
-        eventDate: "desc",
-      },
-    };
+  console.log(cityID);
+  console.log(countryID);
+
+  if (cityID) {
+    where.cityID = cityID;
+  } else if (countryID) {
+    const cities = await client.city.findMany({
+      where: { countryID: countryID as string },
+      select: { id: true },
+    });
+    let cityIDs = cities.map((c) => c.id);
+    where.cityID = { in: cityIDs };
   }
 
-  const events = await client.bigEvent.findMany(queryObject);
+  if (type) {
+    where.type = type;
+  }
+
+  const events = await client.bigEvent.findMany({
+    where,
+    include: {
+      city: { select: { name: true } },
+      Organization: {
+        select: { organizationName: true, profilePicture: true },
+      },
+    },
+  });
   return events;
 };
 

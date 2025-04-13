@@ -66,14 +66,16 @@ model BigEvent {
   quota        Int
   eventDate    DateTime
   country      String
-  city         String
   district     String
   place        String
   picture      String[]
   isActive     Boolean  @default(true)
   creationDate DateTime @default(now())
   type         EventType
-  text    String 
+  text    String
+
+  cityID      String @db.ObjectId
+  city        City   @relation(fields: [cityID], references: [id]) 
 
   OrganizationID   String             @db.ObjectId
   Organization     Organization       @relation(fields: [OrganizationID], references: [id])
@@ -196,3 +198,18 @@ model Friend {
   @@unique([userFirstID,userSecondID])
 
 }
+
+model Country {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  name   String  @unique
+  cities City[]
+}
+
+model City {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  country   Country  @relation(fields: [countryID], references: [id])
+  countryID String   @db.ObjectId
+  bigEvents BigEvent[]
+}
+
