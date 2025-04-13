@@ -75,7 +75,9 @@ export const listEventsByCity = async (country, city, type) => {
 };
 
 export const getAllEvents = async () => {
-  const events = await client.bigEvent.findMany();
+  const events = await client.bigEvent.findMany({
+    include: { Organization: true },
+  });
   return events;
 };
 
