@@ -2,7 +2,8 @@ import client from "../db/dbClient";
 import * as db from "../db/smallEvent";
 
 export const createSmallEvent = async (req, res, next) => {
-  if (!req.user) {
+  const user = req.user;
+  if (!user) {
     res.status(401).json({ message: "unauthorized" });
   }
 
@@ -12,7 +13,7 @@ export const createSmallEvent = async (req, res, next) => {
       res.status(402).json({ messsage: "already have an active event" });
       return;
     }
-    const event = await db.createEvent(req.body, req.user.id);
+    const event = await db.createEvent(req.body, user);
     res.status(201).json({ message: "event created", data: event });
   } catch (error) {
     console.error(error);
@@ -22,10 +23,10 @@ export const createSmallEvent = async (req, res, next) => {
 
 export const getSmallEvents = async (req, res, next) => {
   const { lat, lng, dist } = req.query;
-  console.log("HELLO WORLD" + lat);
 
   try {
-    const events = await db.listEventByDistance(lat, lng, dist);
+    const events = await db.listNearbySmallEvents(lat, lng, dist);
+    console.log(events);
     res.status(200).json({ data: events });
   } catch (error) {
     console.error(error);
@@ -99,6 +100,59 @@ export const decrementAtendeeCount = async (req, res, next) => {
     const updatedAtendees = event.currentAtendees - 1;
     await db.updateAtendees(id, updatedAtendees);
     res.status(201).json({ messsage: "decremented" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const sendAttandanceRequest = async (req, res, next) => {
+  const { eventID } = req.body;
+  const userID = req.user.id;
+  try {
+    const attandance = await db.createAtendee(eventID, userID);
+    res.status(201).json({ data: attandance, message: "Successfully Created" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const approveAttandanceRequest = async (req, res, next) => {
+  const { userID, eventID } = req.body;
+  try {
+    const attandance = await db.updateAtendeeStatus(
+      eventID,
+      userID,
+      "REQUEST_APPROVED"
+    );
+    res
+      .status(201)
+      .json({ data: attandance, message: "Successfully Approved" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const cancelAttandanceRequest = async (req, res, next) => {
+  const { userID, eventID } = req.body;
+  try {
+    const attandance = await db.updateAtendeeStatus(
+      eventID,
+      userID,
+      "REQUEST_CANCELED"
+    );
+    res
+      .status(201)
+      .json({ data: attandance, message: "Successfully Canceled" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAttandanceRequest = async (req, res, next) => {
+  const eventID = req.params.id;
+  try {
+    const list = await db.listAtandanceRequests(eventID);
+    res.status(200).json({ data: list });
   } catch (error) {
     next(error);
   }

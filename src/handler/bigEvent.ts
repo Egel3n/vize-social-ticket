@@ -1,4 +1,5 @@
 import * as db from "../db/bigEvent";
+import { orgByID } from "../db/organization";
 
 export const newBigEvent = async (req, res, next) => {
   const body = req.body;

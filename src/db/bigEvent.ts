@@ -90,6 +90,14 @@ export const eventByID = async (id) => {
     where: {
       id,
     },
+    include: {
+      Organization: true,
+      BigEventComments: {
+        include: {
+          user: true,
+        },
+      },
+    },
   });
   return event;
 };

@@ -34,16 +34,26 @@ router.post(
   upload.fields([{ name: "eventphotos", maxCount: 3 }]),
   bigEventHandler.newBigEvent
 );
+router.post("/bigevent/comment", bigEventHandler.makeAComment);
+
 router.get("/bigevent/list", bigEventHandler.listAllEvents);
 router.get("/bigevent/filter", bigEventHandler.listEvents);
-router.post("/bigevent/comment", bigEventHandler.makeAComment);
 router.get("/bigevent/comment/:id", bigEventHandler.getComments);
 router.get("/bigevent/:id", bigEventHandler.getEvent); //last in order
 
 // SMALL EVENT ROUTES
-router.post("/smallevent/create", smallEventHandler.createSmallEvent);
 router.get("/smallevent/nearby-locations", smallEventHandler.getSmallEvents);
 router.get("/smallevent", smallEventHandler.getSmallEventByID);
+router.get(
+  "/smallevent/attandancelist/:id",
+  smallEventHandler.getAttandanceRequest
+);
+router.post("/smallevent/create", smallEventHandler.createSmallEvent);
+router.post("/smallevent/join", smallEventHandler.sendAttandanceRequest);
+router.put(
+  "/smallevent/approverequest",
+  smallEventHandler.approveAttandanceRequest
+);
 router.put(
   "/smallevent/atendee/increment",
   smallEventHandler.incrementAtendeeCount

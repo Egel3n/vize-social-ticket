@@ -30,9 +30,10 @@ model User {
   PostComments     PostComments[]
   PostLikes        PostLikes[]
 
-  SmallEvent SmallEvent[]
-  Friend1    Friend[]     @relation("firstFriend")
-  Friend2    Friend[]     @relation("secondFriend")
+  SmallEvent         SmallEvent[]
+  Friend1            Friend[]             @relation("firstFriend")
+  Friend2            Friend[]             @relation("secondFriend")
+  SmallEventAttendee SmallEventAttendee[]
 }
 
 enum VerifiedStatus {
@@ -60,7 +61,7 @@ enum EventType {
 }
 
 model BigEvent {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   price        Int
   quota        Int
@@ -69,13 +70,13 @@ model BigEvent {
   district     String
   place        String
   picture      String[]
-  isActive     Boolean  @default(true)
-  creationDate DateTime @default(now())
+  isActive     Boolean   @default(true)
+  creationDate DateTime  @default(now())
   type         EventType
-  text    String
+  text         String
 
-  cityID      String @db.ObjectId
-  city        City   @relation(fields: [cityID], references: [id]) 
+  cityID String @db.ObjectId
+  city   City   @relation(fields: [cityID], references: [id])
 
   OrganizationID   String             @db.ObjectId
   Organization     Organization       @relation(fields: [OrganizationID], references: [id])
@@ -117,17 +118,17 @@ model BigEventAtendees {
 }
 
 model Ticket {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  price        Int
-  isRefunded   Boolean  @default(false) 
-  
-  creationDate DateTime @default(now())
-  user       User     @relation(fields: [userID], references: [id])
-  userID     String   @db.ObjectId
-  bigEvent   BigEvent @relation(fields: [bigEventID], references: [id])
-  bigEventID String   @db.ObjectId
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  price      Int
+  isRefunded Boolean @default(false)
 
-   @@unique([userID,bigEventID])
+  creationDate DateTime @default(now())
+  user         User     @relation(fields: [userID], references: [id])
+  userID       String   @db.ObjectId
+  bigEvent     BigEvent @relation(fields: [bigEventID], references: [id])
+  bigEventID   String   @db.ObjectId
+
+  @@unique([userID, bigEventID])
 }
 
 model Post {
@@ -163,20 +164,42 @@ model PostLikes {
   ownerID String @db.ObjectId
 }
 
-
-
 model SmallEvent {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  location     Json
-  quoata       Int
-  eventDate    DateTime
-  creationDate DateTime @default(now())
-  name         String
-  isActive     Boolean @default(true)
-  currentAtendees Int @default(0)
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  location        Json
+  quoata          Int
+  eventDate       DateTime
+  creationDate    DateTime @default(now())
+  name            String
+  isActive        Boolean  @default(true)
+  currentAtendees Int      @default(0)
 
-  owner   User   @relation(fields: [ownerID], references: [id])
-  ownerID String @db.ObjectId
+  owner              User                 @relation(fields: [ownerID], references: [id])
+  ownerID            String               @db.ObjectId
+  SmallEventAttendee SmallEventAttendee[]
+}
+
+model SmallEventAttendee {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  userID       String         @db.ObjectId
+  eventID      String         @db.ObjectId
+  status       AttendeeStatus
+  requestDate  DateTime       @default(now())
+  approvalDate DateTime?
+
+  user  User       @relation(fields: [userID], references: [id])
+  event SmallEvent @relation(fields: [eventID], references: [id])
+
+  @@index([eventID])
+  @@index([userID])
+  @@unique([eventID,userID])
+  @@map("SmallEventAttendee")
+}
+
+enum AttendeeStatus {
+  REQUEST_SENDED
+  REQUEST_APPROVED
+  REQUEST_CANCELED
 }
 
 enum FriendshipStatus {
@@ -187,29 +210,28 @@ enum FriendshipStatus {
 }
 
 model Friend {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  creationDate  DateTime @default(now())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  creationDate DateTime @default(now())
 
-  userFirst    User   @relation("firstFriend", fields: [userFirstID], references: [id])
-  userFirstID  String @db.ObjectId
-  userSecond   User   @relation("secondFriend", fields: [userSecondID], references: [id])
-  userSecondID String @db.ObjectId
-  status FriendshipStatus @default(Pending)
-  @@unique([userFirstID,userSecondID])
+  userFirst    User             @relation("firstFriend", fields: [userFirstID], references: [id])
+  userFirstID  String           @db.ObjectId
+  userSecond   User             @relation("secondFriend", fields: [userSecondID], references: [id])
+  userSecondID String           @db.ObjectId
+  status       FriendshipStatus @default(Pending)
 
+  @@unique([userFirstID, userSecondID])
 }
 
 model Country {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
-  name   String  @unique
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  name   String @unique
   cities City[]
 }
 
 model City {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  country   Country  @relation(fields: [countryID], references: [id])
-  countryID String   @db.ObjectId
+  country   Country    @relation(fields: [countryID], references: [id])
+  countryID String     @db.ObjectId
   bigEvents BigEvent[]
 }
-
